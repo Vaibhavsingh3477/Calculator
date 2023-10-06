@@ -25,13 +25,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun onDigitClick(view : View) {
-        if(stateError){
+    fun onDigitClick(view: View) {
+        if (stateError) {
             binding.dataTv.text = (view as Button).text
-                stateError = false
+            stateError = false
 
-        }
-        else{
+        } else {
             binding.dataTv.append((view as Button).text)
         }
         lastNumeric = true
@@ -39,33 +38,68 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun onOperatorClick() {}
+    fun onOperatorClick(view: View) {
+        if (!stateError && lastNumeric) {
+            binding.dataTv.append((view as Button).text)
+            lastDot = false
+            lastNumeric = false
+            onEqual()
+        }
+
+    }
 
 
-    fun onAllClearClick() {}
+    fun onAllClearClick() {
+        binding.dataTv.text = ""
+        binding.resultTv.text = ""
+        lastNumeric = false
+        lastDot = false
+        stateError = false
+        binding.resultTv.visibility = View.GONE
+
+    }
 
 
-    fun onEqualClick() {}
+    fun onEqualClick() {
+        onEqual()
+        binding.dataTv.text = binding.resultTv.text.toString().drop(1)
+    }
 
 
-    fun onBackClick() {}
+    fun onBackClick() {
+        binding.dataTv.text = binding.dataTv.text.toString().dropLast(1)
+        try {
+            var lastChar = binding.dataTv.text.toString().last()
+            if (lastChar.isDigit()) {
+                onEqual()
+            }
+        }catch (e : Exception){
+            binding.resultTv.text = ""
+            binding.resultTv.visibility = View.GONE
+            Log.e("last char error" , e.toString())
+        }
+    }
 
 
-    fun onClearClick() {}
+    fun onClearClick(view : View) {
+        binding.dataTv.text = ""
+        lastNumeric = false
+
+    }
 
     @SuppressLint("SetTextI18n")
-    fun onEqual(){
-        if(lastNumeric &&  !stateError){
+    fun onEqual() {
+        if (lastNumeric && !stateError) {
             val txt = binding.dataTv.text.toString()
             expression = ExpressionBuilder(txt).build()
-            try{
+            try {
 
                 val result = expression.evaluate()
-                binding.resultTv.visibility  = View.VISIBLE
-                binding.resultTv.text =  "=" + result.toString()
+                binding.resultTv.visibility = View.VISIBLE
+                binding.resultTv.text = "=" + result.toString()
 
-            }catch (ex : ArithmeticException){
-                Log.e("Evaluate error " , ex.toString())
+            } catch (ex: ArithmeticException) {
+                Log.e("Evaluate error ", ex.toString())
                 binding.resultTv.text = "Error"
                 stateError = true
                 lastNumeric = false

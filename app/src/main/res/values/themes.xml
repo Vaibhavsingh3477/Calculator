@@ -24,6 +24,7 @@
     
     <style name="operatorBtn" parent="CommonButtons">
         <item name="android:textColor">@color/btnbg2</item>
+        <item name= "cornerRadius">32dp</item>
     </style>
     
     

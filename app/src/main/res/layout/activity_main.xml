@@ -10,7 +10,7 @@
         android:id="@+id/data_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="60+40  "
+        android:text=""
         android:textAlignment="viewEnd"
         android:textColor="@color/black"
         android:textSize="28dp"
@@ -105,7 +105,6 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_7"
                 style="@style/DigitButton"
-
                 android:onClick="onDigitClick"
                 android:text="7"
                 tools:ignore="UsingOnClickInXml" />
@@ -240,11 +239,11 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_Equal"
                 style="@style/operatorBtn"
+                android:backgroundTint="@color/btnbg2"
                 android:onClick="onEqualClick"
 
                 android:text="="
-                android:textSize="40dp"
-                tools:ignore="UsingOnClickInXml" />
+                android:textColor="@color/white" />
 
 
         </LinearLayout>
