@@ -12,24 +12,20 @@ import net.objecthunter.exp4j.ExpressionBuilder
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    var lastNumeric = false
-    var stateError = false
-    var lastDot = false
+    private var lastNumeric = false
+    private var stateError = false
     private lateinit var expression: Expression
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
     }
 
     fun onDigitClick(view: View) {
         if (stateError) {
             binding.dataTv.text = (view as Button).text
             stateError = false
-
         } else {
             binding.dataTv.append((view as Button).text)
         }
@@ -37,73 +33,61 @@ class MainActivity : AppCompatActivity() {
         onEqual()
     }
 
-
     fun onOperatorClick(view: View) {
         if (!stateError && lastNumeric) {
             binding.dataTv.append((view as Button).text)
-            lastDot = false
             lastNumeric = false
             onEqual()
         }
-
     }
 
-
-    fun onAllClearClick() {
+    fun onAllClearClick(view: View) {
         binding.dataTv.text = ""
         binding.resultTv.text = ""
         lastNumeric = false
-        lastDot = false
         stateError = false
         binding.resultTv.visibility = View.GONE
-
     }
 
-
-    fun onEqualClick() {
+    fun onEqualClick(view: View) {
         onEqual()
-        binding.dataTv.text = binding.resultTv.text.toString().drop(1)
     }
 
-
-    fun onBackClick() {
-        binding.dataTv.text = binding.dataTv.text.toString().dropLast(1)
-        try {
-            var lastChar = binding.dataTv.text.toString().last()
-            if (lastChar.isDigit()) {
+    fun onBackClick(view: View) {
+        val text = binding.dataTv.text.toString()
+        if (text.isNotEmpty()) {
+            binding.dataTv.text = text.dropLast(1)
+            if (text.last().isDigit()) {
                 onEqual()
             }
-        }catch (e : Exception){
-            binding.resultTv.text = ""
-            binding.resultTv.visibility = View.GONE
-            Log.e("last char error" , e.toString())
         }
     }
 
-
-    fun onClearClick(view : View) {
+    fun onClearClick(view: View) {
         binding.dataTv.text = ""
         lastNumeric = false
-
     }
 
     @SuppressLint("SetTextI18n")
     fun onEqual() {
         if (lastNumeric && !stateError) {
             val txt = binding.dataTv.text.toString()
-            expression = ExpressionBuilder(txt).build()
             try {
-
-                val result = expression.evaluate()
-                binding.resultTv.visibility = View.VISIBLE
-                binding.resultTv.text = "=" + result.toString()
-
+                val result = ExpressionBuilder(txt).build().evaluate()
+                binding.resultTv.apply {
+                    visibility = View.VISIBLE
+                    text = "=$result"
+                }
             } catch (ex: ArithmeticException) {
-                Log.e("Evaluate error ", ex.toString())
-                binding.resultTv.text = "Error"
+                Log.e("Evaluate error", ex.toString())
+                binding.resultTv.apply {
+                    visibility = View.VISIBLE
+                    text = "Error"
+                }
                 stateError = true
                 lastNumeric = false
             }
         }
     }
+
 }

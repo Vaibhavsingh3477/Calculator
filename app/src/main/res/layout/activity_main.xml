@@ -63,8 +63,7 @@
                 android:id="@+id/btn_clear"
                 style="@style/operatorBtn"
                 android:onClick="onClearClick"
-                android:text="C"
-                tools:ignore="UsingOnClickInXml" />
+                android:text="C" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_back"
